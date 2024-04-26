@@ -1,0 +1,38 @@
+name: Main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-22.04
+    outputs:
+      deploy: ${{ steps.setup.outputs.deploy }}
+    steps:
+      - name: Setup
+        id: setup
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]] && [[ ${{ github.ref }} == refs/heads/main ]]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: [setup]
+    if: needs.setup.outputs.deploy == 'true'
+    uses: ./.github/workflows/deploy.yml
+
+  # check-expected-config:
+  #   needs: [setup]
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+
+  #     - name: Check expected config
+  #       run: make test.config
