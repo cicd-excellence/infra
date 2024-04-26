@@ -15,5 +15,5 @@ jobs:
 
       - name: Deploy
         run: |
-          VERSION=$(jq -r '.api.tag' envs/{{matrix.env}}.json)
+          VERSION=$(jq -r '.api.tag' envs/${{matrix.env}}.json)
           echo "Pretending to deploy ${{ matrix.env }} at version $VERSION (if it changed)"
