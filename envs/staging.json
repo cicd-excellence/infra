@@ -1,3 +1,6 @@
 {
-  "api": "registry.example.com/api:foobar2"
+  "api": {
+    "url": "https://registry.example.com/api",
+    "tag": "0c409f3174e39c944adb598ada1fd632fac389a1"
+  }
 }
