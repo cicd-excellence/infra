@@ -1,11 +1,31 @@
 name: Deploy
 
 on:
-  workflow_call:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  setup:
     runs-on: ubuntu-22.04
+    outputs:
+      deploy: ${{ steps.setup.outputs.deploy }}
+    steps:
+      - name: Setup
+        id: setup
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]] && [[ ${{ github.ref }} == refs/heads/main ]]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: [setup]
+    runs-on: ubuntu-22.04
+    if: needs.setup.outputs.deploy == 'true'
     strategy:
       matrix:
         env: [dev, staging, prod]
