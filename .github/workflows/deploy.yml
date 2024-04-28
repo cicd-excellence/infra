@@ -22,8 +22,18 @@ jobs:
             echo "deploy=true" >> "$GITHUB_OUTPUT"
           fi
 
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        run: |
+          make test
+
   deploy:
-    needs: [setup]
+    needs: [setup, test]
     runs-on: ubuntu-22.04
     if: needs.setup.outputs.deploy == 'true'
     strategy:
